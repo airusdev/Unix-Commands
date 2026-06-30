@@ -1,16 +1,30 @@
 import argparse
 import sys
+import keyboard
 
-# VALIDATORS
-def validate_if_string(message: str) -> str:
-    return None
+def sys_write(message: str) -> None:
+    """Shortens sys.stdout.write and flushes with a newline"""
+    sys.stdout.write(message + "\n")
 
-def no_input() -> None:
+def detect_shortcut() -> None:
+    global shortcut_pressed
+    shortcut_pressed = True
 
+# def shortcut_listener() -> None:
+#     keyboard.add_hotkey("ctrl+m", detect_shortcut)
 
-def sys_write(message: str) -> str:
-    """Shortens sys.stdout.write"""
-    sys.stdout.write(message)
+def acquire_input(message: str) -> str:
+    user_input = input(message)
+    return user_input
+
+def file_not_detected() -> None:
+    while True:
+        user_input = acquire_input("acquiring user input: ")
+        sys_write(user_input + '\n')
+
+        if keyboard.is_pressed("ctrl+d"):
+            sys_write("successfully stopped")
+            break
 
 def setup_parser() -> None:
     """Sets up argparse and the arguments"""
@@ -27,7 +41,7 @@ def setup_parser() -> None:
 
 def detect_cat() -> None: # needs a better name for this
     if not args.file:
-        sys_write("no files detected")
+        file_not_detected()        
     else:
         sys_write("files detected")
 
@@ -40,3 +54,4 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
+    
